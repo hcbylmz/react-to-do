@@ -1,6 +1,6 @@
 # Project Image
 
-![To Do Image](src\react-to-do-image.jpg)
+![To Do Image](src/react-to-do-image.jpg)
 
 # Getting Started with Create React App
 
