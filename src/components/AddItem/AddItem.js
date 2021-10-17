@@ -1,51 +1,59 @@
-import { useState,useEffect } from "react";
-import "../AddItem/AddItem.css"
+import { useState, useEffect } from "react";
+import "../AddItem/AddItem.css";
 
-function AddItem({showItem,deleted,deleteItem,complete,setComplete,check}) {
-  const [tempItem, setTempItem] = useState();
-  const [item, setItem] = useState([{text:"Learn",isComplete:false},{text:"React",isComplete:false}]);
+function AddItem({
+  showItem,
+  deleted,
+  deleteItem,
+  complete,
+  setComplete,
+  check,
+}) {
+  const [tempItem, setTempItem] = useState("");
+  const [place, setPlace] = useState("What do you want to do?");
+  const [item, setItem] = useState([
+    { text: "Learn", isComplete: false },
+    { text: "React", isComplete: false },
+  ]);
 
   const addItems = () => {
-    let arr = [...item, {text:tempItem, isComplete:false}];
-    if (tempItem===""){
-        return false;
+    if (tempItem === "" || tempItem.trim() == "") {
+      setPlace("Please fill this field.");
+      setTempItem("");
+      return false;
     }
+
+    let arr = [...item, { text: tempItem, isComplete: false }];
+    setPlace("What do you want to do?");
     setItem(arr);
     setTempItem("");
-   deleteItem(item.length+1);
+    deleteItem(item.length + 1);
   };
 
+  useEffect(
+    () => {
+      let arr3 = [...item];
+      arr3[complete].isComplete = !arr3[complete].isComplete;
+      setItem(arr3);
+    },
+    [complete, check],
+    [item]
+  );
 
-
-  
+  useEffect(
+    () => {
+      showItem(item);
+    },
+    [item],
+    deleted
+  );
 
   useEffect(() => {
-    let arr3 = [...item];
-    arr3[complete].isComplete=!arr3[complete].isComplete;
-    setItem(arr3);
-  },[complete,check])
-  
-
-
-
-  useEffect(()=>{
-    showItem (item);
- 
- 
- },[item],deleted)
-
-
-
-
-   useEffect(()=>{
-       let arr2=[...item];
-       arr2.splice(deleted,1);
-       setItem(arr2);
-       deleteItem(item.length+1);
-       
-   },[deleted])
-
-
+    let arr2 = [...item];
+    arr2.splice(deleted, 1);
+    setItem(arr2);
+    deleteItem(item.length + 1);
+  }, [deleted]);
 
   return (
     <div className="add-item">
@@ -55,12 +63,12 @@ function AddItem({showItem,deleted,deleteItem,complete,setComplete,check}) {
         className="input"
         onChange={(e) => setTempItem(e.target.value)}
         value={tempItem}
-        placeholder="What do you want to do?"
+        placeholder={place}
       />
 
-      <button className="add-button" onClick={addItems}>ADD</button>
-    
-  
+      <button className="add-button" onClick={addItems}>
+        ADD
+      </button>
     </div>
   );
 }
